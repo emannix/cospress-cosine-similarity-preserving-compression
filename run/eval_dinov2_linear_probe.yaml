@@ -1,0 +1,83 @@
+# @package _global_
+defaults:
+  - /R: dinov2_linear_classifier
+  - /model/networks: dinov2_vits_14_linear_classifier
+  - /model/dataset: imagenette
+  # - /model/dataset@model.dataset_override: imagenet
+  - /model/dataset@model.dataset_override: torchvision_cifar100
+  - _self_
+
+task_name: "eval_dinov2_linear_probe"
+
+model:
+
+  trainer:
+    # Other linear probe parameters
+    limit_train_batches: 125
+    max_epochs: 50
+    # Imagenet parameters
+    # limit_train_batches: 2502
+    # max_epochs: 20
+    use_distributed_sampler: False
+    strategy: 'ddp_find_unused_parameters_true'
+
+
+  networks:
+    networks:
+      backbone:
+        _target_: goo.networks.dinov2_linear_classifier.ModelWithIntermediateLayers
+        _partial_: true
+        feature_model:
+          _target_: goo.networks.load_module.LoadModule
+          model_class: 
+            # _target_: goo.methods.self_supervised.proteus.Proteus
+            _target_: goo.methods.self_supervised.proteus_vmfsne7_reversed.Proteus
+            _partial_: true
+          # model_path: 'weights/proteus_vitt_vits.ckpt'
+          model_path: 'weights/tintem_vitt_vits.ckpt'
+          seed: -1
+          module_name: 'student.backbone'
+          module_target: 'backbone'
+          disable_grad: True
+        n_last_blocks: 4
+        outputs: 'all'
+        no_inference: False
+        inner_model: True
+  
+      discriminator:
+        normalize: 'batchnorm'
+
+  custom_callbacks:
+    save_predictions:
+      _target_: goo.callbacks.save_predictions.SavePredictions
+      metrics_calculate: ['accuracy'] # , 'mean_class_accuracy', 'aucroc', 'average_precision'
+      calculate_point: epoch
+      calculate_stages: ['train', 'val', 'test']
+      save_csv: False
+
+  optimizer:
+    optimizer:
+      weight_decay: 0.0
+      momentum: 0.9
+
+  dataloaders:
+    batch_size: 512
+    pin_memory: False
+
+  methods:
+    batch_size: 512
+    learning_rates: [1e-5, 2e-5, 5e-5, 1e-4, 2e-4, 5e-4, 1e-3, 2e-3, 5e-3, 1e-2, 2e-2, 5e-2, 0.1, 0.2, 0.5, 1.0, 2.0]
+    avgpool: [False, True]
+    n_last_blocks: [1, 4]
+
+
+  augmentations:
+    aug_labelled:
+      input_size: 224
+    aug_validation:
+      crop_size: 224
+      resize: 256
+    aug_predict:
+      crop_size: 224
+      resize: 256
+

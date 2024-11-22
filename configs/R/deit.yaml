@@ -1,0 +1,23 @@
+# @package _global_
+defaults:
+  - /model/callbacks: default.yaml
+  - /model/custom_callbacks: save_predictions_all.yaml
+  - /model/dataloaders: sequential.yaml
+  - /model/logger: tensorboard.yaml
+  - /model/loss: crossentropy_mixup.yaml
+  - /model/optimizer: timm_AdamW.yaml
+  - /model/scheduler: my_cosine_scheduler.yaml
+  - /model/trainer: default.yaml
+  - /model/methods: supervised_transformers.yaml 
+  - /R/experiment: ${R}_${model/networks}_${model/dataset}
+  - _self_
+
+predict: False
+
+model:
+  callbacks:
+    early_stopping:
+      _target_: lightning.pytorch.callbacks.EarlyStopping
+      monitor: "val/accuracy"
+      patience: 10
+      mode: "max"

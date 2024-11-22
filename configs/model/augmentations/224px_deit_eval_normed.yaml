@@ -1,0 +1,4 @@
+
+_partial_: true
+_target_: goo.augmentations.deit.BuildTransform
+is_train: false

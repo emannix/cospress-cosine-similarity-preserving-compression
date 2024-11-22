@@ -1,0 +1,12 @@
+optimizer:
+  _target_: torch.optim.SGD
+  _partial_: true
+  lr: 0.001
+  weight_decay: 0.0
+  momentum: 0.9
+
+parameter_groups:
+  _target_: goo.optimizer.parameter_groups.set_parameter_groups
+  _partial_: true
+  param_wd_exclude: null
+  param_lars_exclude: null

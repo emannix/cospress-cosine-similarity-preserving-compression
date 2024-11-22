@@ -1,0 +1,14 @@
+
+_partial_: true
+_target_: goo.augmentations.simclr_custom.SimCLRCustom
+copies: 1
+input_size: 224
+min_scale: 0.08
+hf_prob: 0.5
+cj_prob: 0.0
+random_gray_scale: 0.0
+cj_strength: 0.5
+gaussian_blur: 0.0
+normalize:
+  mean: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]

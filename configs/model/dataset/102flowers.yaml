@@ -1,0 +1,14 @@
+_target_: goo.datasets.base_csv_dataset.CSVDataModule
+base_dir: '/home/unimelb.edu.au/nbloomfield/Desktop/phd-data/flowers/'
+data_dir: '102flowers/'
+train_folder: ''
+train_csv_file: ['train.csv', 'test.csv']
+train_csv_image: 'files'
+train_csv_label: 'labels'
+train_image_ext: ''
+
+val_folder: ''
+val_csv_file: ['val.csv']
+val_csv_image: 'files'
+val_csv_label: 'labels'
+val_image_ext: ''

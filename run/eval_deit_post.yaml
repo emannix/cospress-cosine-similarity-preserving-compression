@@ -1,0 +1,64 @@
+# @package _global_
+defaults:
+  - /R: deit
+  - /model/networks: deit_tiny_patch16_224_pretrained
+  - /model/dataset: cifar10
+  - /model/dataset@model.dataset_override: torchvision_cifar100
+  - _self_
+
+
+task_name: "eval_deit_post"
+
+model:
+
+  trainer:
+    max_epochs: 300
+    check_val_every_n_epoch: 10
+
+  dataloaders:
+    pin_memory: False
+
+  callbacks:
+    early_stopping:
+      _target_: lightning.pytorch.callbacks.EarlyStopping
+      monitor: "val/accuracy"
+      patience: 100
+      mode: "max"
+
+  networks:
+    networks:
+      backbone:
+        _target_: goo.networks.load_module.LoadModule
+        model_class: 
+          # _target_: goo.methods.self_supervised.proteus.Proteus
+          _target_: goo.methods.self_supervised.proteus_vmfsne7_reversed.Proteus
+          _partial_: true
+        # model_path: 'weights/proteus_vitt_vits.ckpt'
+        model_path: 'weights/tintem_vitt_vits.ckpt'
+        seed: -1
+        module_name: 'student.backbone'
+        disable_grad: False
+
+      discriminator:
+        _target_: goo.networks.load_module.LoadModule
+        model_class: 
+          _target_: goo.methods.supervised_transformers.SupervisedTransformers
+          _partial_: true
+        model_path: XXX.ckpt
+        seed: -1
+        module_name: 'discriminator'
+        module_target: 'discriminator'
+        disable_grad: False
+
+  scheduler:
+    scheduler:
+      _target_: goo.scheduler.dino_cosine_scheduler.CosineScheduler
+      _partial_: true
+      warmup_prop: [0.05, 0.0] # 5 warmup epochs in 1000 steps. Don't warmup weight decay
+      warmup_value: [1e-6, 0.0]
+      base_value: [7.5e-5, 0.05] # 0.0005 * 0.25 = 0.000125 - (64/256)
+      final_value: [1e-5, 0.05]
+      attribute: ['lr', 'weight_decay']
+      T_max: 1
+    scheduler_lightning:
+      interval: epoch

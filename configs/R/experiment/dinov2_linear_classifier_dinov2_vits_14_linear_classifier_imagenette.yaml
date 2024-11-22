@@ -1,0 +1,26 @@
+# @package _global_
+# python3 main.py +R=dino +model/dataset=cifar10 +model/networks=dino_resnet18
+defaults:
+  - /model/augmentations@model.augmentations.aug_labelled: 224px_simclr_finetune_normed.yaml
+  - /model/augmentations@model.augmentations.aug_validation: center_crop_224px.yaml
+  - /model/augmentations@model.augmentations.aug_predict: center_crop_224px.yaml
+  - _self_
+
+model:
+  dataloaders:
+    batch_size: 128
+    # shuffle: False
+
+  trainer:
+    max_epochs: 200
+    benchmark: True
+    precision: 32
+    # precision: 64
+    # num_sanity_val_steps: 0
+
+
+  optimizer:
+    optimizer:
+      lr: 6e-2 # (lr = 6e-2)*lr_factor, lr_factor = batch_size / 128
+      weight_decay: 5e-4
+      momentum: 0.9

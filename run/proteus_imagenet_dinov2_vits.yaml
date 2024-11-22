@@ -1,0 +1,93 @@
+# @package _global_
+defaults:
+  - /R: proteus
+  - /model/networks: proteus_vit_s_t
+  - /model/dataset: torchvision_cifar100
+  - /model/dataset@model.dataset_override: imagenet
+  - _self_
+
+task_name: "proteus_imagenet_dinov2_vits"
+
+predict: False
+delete_checkpoint: False
+
+model:
+
+  methods:
+    evaluate_val: False
+    model_ema: False
+    metric: 'MSE'
+    lambda_patch: 0.0
+
+  scheduler:
+    scheduler:
+      args:
+        lr: 5.0e-4
+        warmup_epochs: 5
+
+  optimizer:
+    optimizer:
+      args:
+        lr: 5.0e-4
+        weight_decay: 0.05
+
+  trainer:
+    precision: '16-mixed'
+    benchmark: True
+    max_epochs: 300
+    check_val_every_n_epoch: 10
+    # gradient_clip_val: 0.1
+    # gradient_clip_algorithm: "norm"
+    # limit_train_batches: 50
+    # limit_val_batches: 50
+    # log_every_n_steps: 1
+    # ============================================
+
+  dataloaders:
+    batch_size: 1024
+    pin_memory: False
+    val_collate_fn: null
+
+  callbacks:
+    learning_rate_monitor:
+      log_weight_decay: True
+    model_checkpoint:
+      monitor: "val/forward_student_kNN_accuracy"
+      mode: "max"
+
+  custom_callbacks:
+    save_knn_pred:
+      _target_: goo.callbacks.save_knn_pred.KNNPrediction
+      backbone: 'forward_student'
+      check_knn_every: 10
+      nearest_neighbours: 200
+      temperature: 0.1
+      sample_frac: 0.2
+    save_knn_pred2:
+      _target_: goo.callbacks.save_knn_pred.KNNPrediction
+      backbone: 'forward_student_head'
+      check_knn_every: 10
+      nearest_neighbours: 200
+      temperature: 0.1
+      sample_frac: 0.2
+
+  augmentations:
+    aug_validation:
+      _partial_: true
+      _target_: goo.augmentations.center_crop.CenterCropAugment
+      crop_size: 224
+      resize: 256
+      stretch: False
+      normalize:
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+    aug_predict:
+      _partial_: true
+      _target_: goo.augmentations.center_crop.CenterCropAugment
+      crop_size: 224
+      resize: 256
+      stretch: False
+      normalize:
+        mean: [0.485, 0.456, 0.406]
+        std: [0.229, 0.224, 0.225]
+

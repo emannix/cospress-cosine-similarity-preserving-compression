@@ -1,0 +1,5 @@
+_target_: goo.datasets.base_folder_dataset.FolderDataModule
+base_dir: '/media/nbloomfield/Question/phd-data/'
+data_dir: 'imagenet/ILSVRC/Data/CLS-LOC/'
+train_folder: 'train/'
+val_folder: 'val/'

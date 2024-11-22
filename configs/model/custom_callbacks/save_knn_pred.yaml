@@ -1,0 +1,7 @@
+
+save_knn_pred:
+  _target_: goo.callbacks.save_knn_pred.KNNPrediction
+  backbone: 'backbone'
+  check_knn_every: 10
+  nearest_neighbours: 200
+  temperature: 0.1

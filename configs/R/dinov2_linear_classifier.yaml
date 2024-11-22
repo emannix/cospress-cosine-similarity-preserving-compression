@@ -1,0 +1,45 @@
+# @package _global_
+defaults:
+  - /model/callbacks: default.yaml
+  - /model/custom_callbacks: 
+    - save_predictions_eval.yaml
+    # - save_knn_pred.yaml
+  - /model/dataloaders: sequential.yaml
+  - /model/logger: tensorboard.yaml
+  - /model/loss: crossentropy.yaml
+  - /model/optimizer: pytorch_SGD.yaml
+  - /model/scheduler: pytorch_cosinelrdecay.yaml
+  - /model/trainer: default.yaml
+  - /model/methods: supervised_dinov2.yaml
+  - /R/experiment: ${R}_${model/networks}_${model/dataset}
+  - _self_
+
+predict: False
+
+model:
+  trainer:
+    check_val_every_n_epoch: 1
+    max_epochs: 10
+    limit_train_batches: 1250
+  
+  dataloaders:
+    batch_size: 128
+    train_labelled_sampler:
+      _target_: goo.samplers.dinov2_samplers.InfiniteSampler
+      _partial_: True
+      shuffle: True
+
+  loss:
+    loss:
+      reduction: 'mean'
+
+  # custom_callbacks:
+  #   save_knn_pred:
+  #     check_knn_every: 10
+  #     backbone: "backbone"
+
+  callbacks:
+    model_checkpoint:
+      dirpath: ${paths.output_dir}/checkpoints
+      monitor: "val/max_acc"
+      mode: "max"

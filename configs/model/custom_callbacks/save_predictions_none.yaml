@@ -1,0 +1,6 @@
+
+save_predictions:
+  _target_: goo.callbacks.save_predictions.SavePredictions
+  metrics_calculate: []
+  calculate_point: batch
+  calculate_stages: []

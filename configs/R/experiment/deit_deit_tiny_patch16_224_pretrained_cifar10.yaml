@@ -1,0 +1,45 @@
+# @package _global_
+# python3 main.py +R=dinot_ft +model/dataset=cifar10 +model/networks=simclrv2_finetune
+defaults:
+  - /model/augmentations@model.augmentations.aug_labelled: 224px_deit_finetune_normed.yaml
+  - /model/augmentations@model.augmentations.aug_validation: 224px_deit_eval_normed.yaml
+  - /model/augmentations@model.augmentations.aug_predict: 224px_deit_eval_normed.yaml
+  - _self_
+
+model:
+  trainer:
+    max_epochs: 1000
+    check_val_every_n_epoch: 1
+    benchmark: true
+    precision: 16
+
+  dataloaders:
+    batch_size: 768
+    shuffle: false
+    train_labelled_sampler:
+      _target_: goo.samplers.repeated_augmentations.RASampler
+      _partial_: true
+
+  optimizer:
+    optimizer:
+      lr: 1.0
+      weight_decay: 1.0
+
+    parameter_groups:
+      drop_1dim: True
+      param_wd_exclude: []
+      param_lars_exclude: []
+
+  scheduler:
+    scheduler:
+      _target_: goo.scheduler.dino_cosine_scheduler.CosineScheduler
+      _partial_: true
+      warmup_prop: [0.005, 0.0] # 5 warmup epochs in 1000 steps. Don't warmup weight decay
+      warmup_value: [1e-6, 0.0]
+      base_value: [7.5e-6, 0.05] # 0.0005 * 0.25 = 0.000125 - (64/256)
+      final_value: [1e-5, 0.05]
+      attribute: ['lr', 'weight_decay']
+      T_max: 1
+    scheduler_lightning:
+      interval: epoch
+

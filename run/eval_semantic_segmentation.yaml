@@ -1,0 +1,48 @@
+# @package _global_
+defaults:
+  - /R: supervised_segmentation
+  - /model/networks: dinov2_vits_14_linear_classifier_segmentation
+  - /model/dataset: torchvision_voc2012
+  - _self_
+
+task_name: "eval_semantic_segmentation"
+
+model:
+  trainer:
+    precision: '16-mixed'
+    check_val_every_n_epoch: 1
+    max_epochs: 20
+
+  dataloaders:
+    batch_size: 16
+
+  networks:
+    networks:
+      backbone:        
+        _target_: goo.networks.dinov2_linear_classifier.ModelWithIntermediateLayers
+        _partial_: true
+        feature_model:
+          _target_: goo.networks.load_module.LoadModule
+          model_class: 
+            # _target_: goo.methods.self_supervised.proteus.Proteus
+            _target_: goo.methods.self_supervised.proteus_vmfsne7_reversed.Proteus
+            _partial_: true
+          # model_path: 'weights/proteus_vitt_vits.ckpt'
+          model_path: 'weights/tintem_vitt_vits.ckpt'
+          seed: -1
+          module_name: 'student.backbone'
+          module_target: 'backbone'
+          disable_grad: True
+        n_last_blocks: 1
+        outputs: 'patch_tkn'
+        no_inference: True
+        inner_model: True
+
+      discriminator:
+        _target_: goo.networks.dinov2_linear_classifier_segmentation.LinearClassifier
+        _partial_: true
+        in_channels: 192
+        tokenW: 32
+        tokenH: 32
+        normalize: Null
+

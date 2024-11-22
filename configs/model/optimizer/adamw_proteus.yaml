@@ -1,0 +1,15 @@
+
+optimizer:
+  _target_: goo.optimizer.timm_wrapper.timm_wrapper
+  _partial_: true
+  args: 
+    opt: 'adamw'
+    opt_eps: 1.0e-8
+    opt-betas: null
+    momentum: 0.9
+    weight_decay: 0.05
+    lr: 5.0e-4
+
+parameter_groups: Null
+
+

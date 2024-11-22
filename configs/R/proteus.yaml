@@ -1,0 +1,33 @@
+# @package _global_
+defaults:
+  - /model/callbacks: default.yaml
+  - /model/custom_callbacks: 
+    - save_predictions_eval.yaml
+  - /model/dataloaders: sequential.yaml
+  - /model/logger: tensorboard.yaml
+  - /model/loss: crossentropy.yaml
+  - /model/optimizer: adamw_proteus.yaml
+  - /model/scheduler: cosine_proteus.yaml
+  - /model/trainer: default.yaml
+  - /model/methods: proteus.yaml 
+  - /R/experiment: ${R}_${model/networks}_${model/dataset}
+  - _self_
+
+predict: False
+
+model:
+  trainer:
+    check_val_every_n_epoch: 1
+
+  custom_callbacks:
+    save_predictions:
+      _target_: goo.callbacks.save_predictions.SavePredictions
+      metrics_calculate: []
+      calculate_point: epoch
+      calculate_stages: ['train', 'val', 'test']
+
+  callbacks:
+    model_checkpoint:
+      dirpath: ${paths.output_dir}/checkpoints
+      monitor: "val/loss"
+      mode: "min"

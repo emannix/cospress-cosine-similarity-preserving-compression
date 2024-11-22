@@ -1,0 +1,19 @@
+
+optimizer:
+  _target_: goo.optimizer.paws_lars.LARS
+  _partial_: true
+  trust_coefficient: 0.001
+  optimizer:
+    _target_: goo.optimizer.paws_SGD.SGD
+    _partial_: true
+    lr: 3.2
+    nesterov: False
+    weight_decay: 1.0e-06
+    momentum: 0.9
+
+parameter_groups:
+  _target_: goo.optimizer.parameter_groups.set_parameter_groups
+  _partial_: true
+  param_wd_exclude: ['bias', 'bn']
+  param_lars_exclude: ['bias', 'bn']
+ 

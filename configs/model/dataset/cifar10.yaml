@@ -1,0 +1,2 @@
+_target_: goo.datasets.CIFAR10_lightning.CIFAR10DataModule
+data_dir: datasets

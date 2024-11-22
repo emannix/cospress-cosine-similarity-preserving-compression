@@ -1,0 +1,15 @@
+
+_partial_: true
+_target_: goo.augmentations.proteus.build_transform
+is_train: False
+args:
+  input_size: 224
+  eval_crop_ratio: 0.875
+  color_jitter: 0.3
+  aa: 'rand-m9-mstd0.5-inc1'
+  train_interpolation: 'bicubic'
+  reprob: 0.25
+  remode: 'pixel'
+  recount: 1
+  augmentations_fix_seed: False
+

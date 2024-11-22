@@ -1,0 +1,4 @@
+
+save_representation:
+  _target_: goo.callbacks.save_representation.SaveRepresentation
+  layers: ['backbone', 'head']

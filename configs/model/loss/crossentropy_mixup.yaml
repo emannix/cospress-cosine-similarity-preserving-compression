@@ -1,0 +1,3 @@
+loss:
+  _target_: timm.loss.SoftTargetCrossEntropy
+  _partial_: true

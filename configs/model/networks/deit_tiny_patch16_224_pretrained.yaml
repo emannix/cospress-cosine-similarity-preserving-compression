@@ -1,0 +1,21 @@
+networks:
+  backbone:
+    _target_: goo.networks.deit.deit_tiny_patch16_224
+    _partial_: true
+    pretrained: true
+    final_layer: false
+    drop_rate: 0.0
+    drop_path_rate: 0.1
+    # drop_block_rate: null
+    img_size: 224
+
+  discriminator:
+    _target_: goo.networks.deit.deit_tiny_patch16_224
+    _partial_: true
+    pretrained: true
+    final_layer: true
+    drop_rate: 0.0
+    drop_path_rate: 0.1
+    # drop_block_rate: null
+    img_size: 224
+

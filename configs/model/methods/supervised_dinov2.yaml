@@ -1,0 +1,4 @@
+_target_: goo.methods.fully_supervised.supervised_dinov2.Supervised
+learning_rates: [1e-5]
+avgpool: [True]
+n_last_blocks: [1]

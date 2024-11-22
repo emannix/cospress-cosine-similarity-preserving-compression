@@ -1,0 +1,14 @@
+
+optimizer:
+  _target_: timm.optim.AdamW
+  _partial_: true
+  lr: 1.0
+  weight_decay: 1.0
+  eps: 1e-8
+
+parameter_groups:
+  _target_: goo.optimizer.parameter_groups.set_parameter_groups
+  _partial_: true
+  drop_1dim: True
+  param_wd_exclude: ['bias']
+  param_lars_exclude: ['bias']

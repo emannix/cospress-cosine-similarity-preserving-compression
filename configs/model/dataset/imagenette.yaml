@@ -1,0 +1,5 @@
+_target_: goo.datasets.base_folder_dataset.FolderDataModule
+base_dir: '/home/unimelb.edu.au/nbloomfield/Desktop/phd-data/imagenet_subsets/'
+data_dir: 'imagenette2/'
+train_folder: 'train/'
+val_folder: 'val/'

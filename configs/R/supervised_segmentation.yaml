@@ -1,0 +1,42 @@
+# @package _global_
+defaults:
+  - /model/callbacks: default.yaml
+  # - /model/custom_callbacks: 
+  #   - save_predictions_eval.yaml
+    # - save_knn_pred.yaml
+  - /model/dataloaders: sequential.yaml
+  - /model/logger: tensorboard.yaml
+  - /model/loss: crossentropy.yaml
+  - /model/optimizer: PAWS_LARS.yaml
+  - /model/scheduler: paws_cosine_annealing_with_warmup.yaml
+  - /model/trainer: default.yaml
+  - /model/methods: supervised_segmentation.yaml 
+  - /R/experiment: ${R}_${model/networks}_${model/dataset}
+  - _self_
+
+model:
+  trainer:
+    check_val_every_n_epoch: 2
+
+  # custom_callbacks:
+  #   # save_knn_pred:
+  #   #   backbone: "backbone"
+  #   #   check_knn_every: 2
+  #   #   nearest_neighbours: 200
+  #   #   temperature: 0.1
+  #   save_predictions:
+  #     _target_: goo.callbacks.save_predictions.SavePredictions
+  #     metrics_calculate: ['mIoU']
+  #     calculate_point: epoch
+  #     calculate_stages: ['train', 'val', 'test']
+  #     save_csv: False
+
+  optimizer:
+    parameter_groups:
+      param_opt_exclude: ['backbone']
+
+  callbacks:
+    model_checkpoint:
+      dirpath: ${paths.output_dir}/checkpoints
+      monitor: "val/loss"
+      mode: "min"

@@ -1,0 +1,34 @@
+# @package _global_
+# python3 main.py +R=simclr_ft +model/dataset=cifar10 +model/networks=simclrv2_finetune
+defaults:
+  - /model/augmentations@model.augmentations.aug_labelled: 224px_proteus_train.yaml
+  - /model/augmentations@model.augmentations.aug_validation: 224px_proteus_train.yaml
+  - /model/augmentations@model.augmentations.aug_predict: 224px_proteus_train.yaml
+  - _self_
+
+model:
+  trainer:
+    max_epochs: 300
+    check_val_every_n_epoch: 1
+    benchmark: True
+    precision: '16-mixed'
+
+  dataloaders:
+    batch_size: 64
+    train_collate_fn:
+      _partial_: true
+      _target_: goo.augmentations.proteus.collate_data_and_cast_aug
+      mask_ratio: [0.5]
+      mask_probability: 0.5
+      dtype: 'torch.half'
+      n_tokens: 256 # 16**2  # (args.global_crops_size // args.patch_size) ** 2
+      mask_first_n: True
+      mask_generator:
+        _target_: goo.augmentations.proteus.RandomMaskingGenerator
+        input_size: 16 # 224/14 # args.global_crops_size // args.patch_size
+      clone_batch: 1
+    val_collate_fn: 'copy'
+
+    train_labelled_sampler:
+      _partial_: true
+      _target_: goo.samplers.proteus_repeated_augments.RASampler
