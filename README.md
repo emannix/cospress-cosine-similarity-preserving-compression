@@ -33,7 +33,7 @@ For the semantic segmentation evaluation, run
 
 For an example OOD detection evaluation, run
 
-	python3 main.py --config-name base.yaml +run=eval_semantic_segmentation.yaml 
+	python3 run/eval_ood_detection.py
 
 To finetune distilled students using DeiT, run the following for the initial linear head training
 
