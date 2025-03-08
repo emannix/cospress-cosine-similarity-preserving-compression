@@ -6,7 +6,7 @@ defaults:
   - /model/dataset@model.dataset_override: imagenet
   - _self_
 
-task_name: "TinTeM_imagenet_dinov2_vits"
+task_name: "CosPress_imagenet_dinov2_vits"
 
 predict: False
 delete_checkpoint: False

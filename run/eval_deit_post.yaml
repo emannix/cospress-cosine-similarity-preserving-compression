@@ -34,7 +34,7 @@ model:
           _target_: goo.methods.self_supervised.proteus_vmfsne7_reversed.Proteus
           _partial_: true
         # model_path: 'weights/proteus_vitt_vits.ckpt'
-        model_path: 'weights/tintem_vitt_vits.ckpt'
+        model_path: 'weights/cospress_vitt_vits.ckpt'
         seed: -1
         module_name: 'student.backbone'
         disable_grad: False

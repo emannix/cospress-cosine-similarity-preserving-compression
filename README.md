@@ -1,14 +1,14 @@
-# Faithful Label-free Knowledge Distillation
+# Preserving Angles Improves Feature Distillation of Foundation Models
 
 ## Installation
 
 Create a new Python 3.9 environment and install the packages in the requirements.txt file. 
 
-## Knowledge distillation
+## Feature Distillation
 
-To fit a student network using the Teacher in the Middle (TinTeM) approach run
+To fit a student network using the Cosine-similarity Preserving Compression (CosPress) approach run
 
-	python3 main.py --config-name base.yaml +run=TinTeM_imagenet_dinov2_vits.yaml 
+	python3 main.py --config-name base.yaml +run=CosPress_imagenet_dinov2_vits.yaml 
 
 For the Proteus approach, run
 

@@ -53,7 +53,7 @@ def eval_ood_KNN(indist_labelled, indist_val, outdist, k=1):
 
 
 # orig_mod = Proteus.load_from_checkpoint("weights/proteus_vitt_vits.ckpt")
-orig_mod = TinTeM.load_from_checkpoint("weights/tintem_vitt_vits.ckpt")
+orig_mod = TinTeM.load_from_checkpoint("weights/cospress_vitt_vits.ckpt")
 orig_mod = orig_mod.student.backbone
 
 orig_mod.cuda()
